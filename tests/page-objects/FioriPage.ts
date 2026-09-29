@@ -1,18 +1,21 @@
-import { browser } from "@wdio/globals";
-import type { wdi5Selector } from "wdio-ui5-service";
+import type { Locator, Page } from "@playwright/test";
 
 export class FioriPage {
-  async open(hash = ""): Promise<void> {
-    await browser.url(hash ? `/#${hash.replace(/^#/, "")}` : "/");
+  constructor(private readonly page: Page) {}
+
+  async open(path = ""): Promise<void> {
+    await this.page.goto(path);
   }
 
-  async control(selector: wdi5Selector): Promise<unknown> {
-    return browser.asControl(selector);
+  ui5Control(role: string, properties?: Record<string, string>): Locator {
+    return this.page.getByRoleUI5(role, properties);
   }
 
-  async controls(selector: wdi5Selector): Promise<unknown[]> {
-    return browser.allControls(selector);
+  ui5Path(path: string): Locator {
+    return this.page.locateUI5(path);
+  }
+
+  webGuiSid(sid: string): Locator {
+    return this.page.locateSID(sid);
   }
 }
-
-export const fioriPage = new FioriPage();

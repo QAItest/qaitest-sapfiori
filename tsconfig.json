@@ -6,7 +6,7 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node", "@openui5/types", "@wdio/globals/types", "@wdio/cucumber-framework"]
+    "types": ["node", "@playwright/test"]
   },
-  "include": ["wdio.conf.ts", "tests/**/*.ts", "utils/**/*.ts"]
+  "include": ["playwright.config.ts", "tests/**/*.ts", "utils/**/*.ts"]
 }

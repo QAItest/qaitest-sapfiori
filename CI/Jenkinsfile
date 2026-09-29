@@ -2,14 +2,17 @@ pipeline {
   agent any
 
   environment {
-    BASE_URL = credentials('sap-fiori-base-url')
-    wdi5_username = credentials('sap-fiori-username')
-    wdi5_password = credentials('sap-fiori-password')
+    SAP_BASE_URL = credentials('sap-fiori-base-url')
+    SAP_USERNAME = credentials('sap-fiori-username')
+    SAP_PASSWORD = credentials('sap-fiori-password')
   }
 
   stages {
     stage('Install') {
-      steps { sh 'npm ci' }
+      steps {
+        sh 'npm ci'
+        sh 'npx playwright install chromium'
+      }
     }
     stage('Validate') {
       steps { sh 'npm run typecheck' }

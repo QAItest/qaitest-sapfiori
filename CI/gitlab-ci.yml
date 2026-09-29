@@ -6,6 +6,7 @@ sap-fiori-tests:
   stage: test
   script:
     - npm ci
+    - npx playwright install --with-deps chromium
     - npm run typecheck
     - npm test
   artifacts:
