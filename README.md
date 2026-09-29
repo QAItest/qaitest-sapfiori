@@ -22,6 +22,7 @@ data, mandatory CI provider, or committed credentials.
 - optional automatic SAP login through `sapConfig`
 - a reusable SAP Fiori page object
 - Gherkin and executable test examples mapped with an Xray key
+- reusable `.feature` export, sanitization, and result-import commands aligned with `qaitest-pytest`
 - HTML, JSON, JUnit, screenshot, video, and trace artifacts
 - an Xray-oriented result summary
 - CI templates for GitHub Actions, GitLab CI, and Jenkins
@@ -142,6 +143,41 @@ npm run report:summary
 
 Publishing remains optional because Xray Cloud and Data Center use different endpoints. Perform
 the upload in CI and store the Xray credentials in the CI secret store.
+
+## Feature import and export
+
+The synchronization utilities mirror the command model used by `qaitest-pytest`:
+
+```bash
+npm run test-export -- --key TEST-101
+npm run test-export -- --keys TEST-101 TEST-102
+npm run test-export -- --keys-file feature-keys.txt
+npm run test-sanitize -- tests/features/smoke/TEST-101.feature --key TEST-101
+npm run test-import -- --file reports/results.json
+```
+
+`test-export` accepts either a local source or Xray endpoints. Set `FEATURE_SOURCE_PATH` to:
+
+- a directory containing `.feature` files;
+- a ZIP archive exported by Xray;
+- a JSON manifest containing `{ "path", "content" }` objects.
+
+Without `FEATURE_SOURCE_PATH`, the command authenticates with `TEST_MGMT_AUTH_URL`, reads labels
+through `TEST_MGMT_GRAPHQL_URL`, and downloads Gherkin from `TEST_MGMT_EXPORT_URL`. Credentials can
+come directly from `TEST_MGMT_CLIENT_ID` / `TEST_MGMT_CLIENT_SECRET` or indirectly from
+`TEST_MANAGEMENT_SECRET_ID` using an environment JSON object or `file:` JSON reference.
+
+Selection and organization options are compatible with the Pytest template:
+
+- `--key`, `--keys`, and `--keys-file` select test cases;
+- `--domains` filters by functional labels;
+- `--require-env-appium` retains tests carrying `env:appium` or `env_appium`;
+- `FEATURE_OUTPUT_DIR` controls the destination, defaulting to `tests/features`;
+- Xray labels determine the destination subfolder, with `unlabeled/` as fallback.
+
+The sanitizer normalizes line endings and whitespace, converts tags such as `@env:ui` to
+`@env_ui`, and keeps only the selected Jira-style test key. `test-import` reads Playwright JSON and
+writes a summary containing labels, Jira keys, execution counts, and failed test titles.
 
 ## Reports and diagnostics
 

@@ -20,11 +20,16 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "report:summary": "tsx utils/xray-summary.ts"
+    "report:summary": "tsx utils/xray-summary.ts",
+    "test-export": "tsx utils/export_test_xray.ts",
+    "test-import": "tsx utils/import_test_xray.ts",
+    "test-sanitize": "tsx utils/gherkin_sanitizer.ts"
   },
   "devDependencies": {
     "@playwright/test": "npm:@playwright-sap/test@^1.1.6",
+    "@types/adm-zip": "^0.5.8",
     "@types/node": "^24.10.0",
+    "adm-zip": "^0.6.1",
     "dotenv": "^18.0.4",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
