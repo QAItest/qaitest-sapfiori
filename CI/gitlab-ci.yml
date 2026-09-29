@@ -1,0 +1,15 @@
+image: node:20
+
+stages: [test]
+
+sap-fiori-tests:
+  stage: test
+  script:
+    - npm ci
+    - npm run typecheck
+    - npm test
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - reports/

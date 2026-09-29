@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+
+  environment {
+    BASE_URL = credentials('sap-fiori-base-url')
+    wdi5_username = credentials('sap-fiori-username')
+    wdi5_password = credentials('sap-fiori-password')
+  }
+
+  stages {
+    stage('Install') {
+      steps { sh 'npm ci' }
+    }
+    stage('Validate') {
+      steps { sh 'npm run typecheck' }
+    }
+    stage('Test') {
+      steps { sh 'npm test' }
+    }
+  }
+
+  post {
+    always { archiveArtifacts artifacts: 'reports/**/*', allowEmptyArchive: true }
+  }
+}

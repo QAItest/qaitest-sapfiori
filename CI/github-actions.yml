@@ -1,0 +1,30 @@
+name: sap-fiori-tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  wdi5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+        env:
+          BASE_URL: ${{ secrets.SAP_FIORI_BASE_URL }}
+          wdi5_username: ${{ secrets.SAP_FIORI_USERNAME }}
+          wdi5_password: ${{ secrets.SAP_FIORI_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sap-fiori-test-reports
+          path: reports/

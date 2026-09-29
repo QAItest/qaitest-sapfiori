@@ -1,0 +1,39 @@
+{
+  "name": "qaitest-sapfiori",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Production-ready SAP Fiori and UI5 end-to-end test template with wdi5, WebdriverIO, Cucumber, and Xray-ready reports.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "clean:reports": "node -e \"const fs=require('node:fs');fs.rmSync('reports',{recursive:true,force:true});fs.mkdirSync('reports',{recursive:true});fs.writeFileSync('reports/.gitkeep','')\"",
+    "test": "npm run clean:reports && wdio run wdio.conf.ts --headless",
+    "test:headed": "npm run clean:reports && wdio run wdio.conf.ts",
+    "test:debug": "npm run clean:reports && wdio run wdio.conf.ts --debug",
+    "test:smoke": "npm run clean:reports && wdio run wdio.conf.ts --headless --cucumberOpts.tagExpression='@smoke'",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "report:summary": "tsx utils/xray-summary.ts"
+  },
+  "devDependencies": {
+    "@openui5/types": "^1.152.0",
+    "@sapui5/types": "^1.152.0",
+    "@types/node": "^24.10.0",
+    "@wdio/cli": "^9.32.0",
+    "@wdio/cucumber-framework": "^9.32.0",
+    "@wdio/globals": "^9.31.3",
+    "@wdio/local-runner": "^9.32.0",
+    "@wdio/spec-reporter": "^9.32.0",
+    "@wdio/types": "^9.32.0",
+    "dotenv": "^18.0.4",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "wdio-cucumberjs-json-reporter": "^6.0.1",
+    "wdio-ui5-service": "^3.0.12",
+    "webdriverio": "^9.32.0"
+  }
+}

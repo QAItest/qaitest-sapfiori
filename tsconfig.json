@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node", "@openui5/types", "@wdio/globals/types", "@wdio/cucumber-framework"]
+  },
+  "include": ["wdio.conf.ts", "tests/**/*.ts", "utils/**/*.ts"]
+}
