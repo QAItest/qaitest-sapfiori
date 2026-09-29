@@ -1,5 +1,6 @@
 node_modules/
 .env
+playwright/.auth/
 reports/*
 !reports/.gitkeep
 *.log

@@ -20,6 +20,7 @@ data, mandatory CI provider, or committed credentials.
 - SAP-aware UI5 locators: `getByRoleUI5()` and `locateUI5()`
 - SAP WebGUI locators: `locateSID()` and `getByRoleSID()`
 - optional automatic SAP login through `sapConfig`
+- reusable explicit login/logout flow for Fiori Launchpad authentication
 - a reusable SAP Fiori page object
 - Gherkin and executable test examples mapped with an Xray key
 - reusable `.feature` export, sanitization, and result-import commands aligned with `qaitest-pytest`
@@ -50,6 +51,7 @@ SAPUI5 Worklist demo, so the smoke test can run without credentials.
 ```bash
 npm test
 npm run test:smoke
+npm run test:auth
 npm run test:headed
 npm run test:debug
 npm run test:ui
@@ -117,6 +119,38 @@ SAP_AUTO_LOGIN=true
 ```
 
 Credentials must come from the local environment or the CI secret store.
+
+### Explicit login/logout flow
+
+`SapAuth` uses Playwright SAP's `page.SAPLogin()` for both Fiori Launchpad and WebGUI login pages.
+The dedicated command disables global auto-login so the login step is exercised explicitly:
+
+```bash
+npm run test:auth
+```
+
+Configure logout in one of these ways:
+
+1. Set `SAP_LOGOUT_URL` when the SAP landscape provides a dedicated logout endpoint.
+2. Set `SAP_LOGOUT_MENU_SELECTOR` and `SAP_LOGOUT_ACTION_SELECTOR` for CSS-based controls.
+3. Set `SAP_LOGOUT_MENU_ROLE` / `SAP_LOGOUT_MENU_PROPERTIES` and
+   `SAP_LOGOUT_ACTION_ROLE` / `SAP_LOGOUT_ACTION_PROPERTIES` for semantic UI5 controls.
+
+Example for an English Fiori Launchpad:
+
+```dotenv
+SAP_LOGOUT_MENU_ROLE=Button
+SAP_LOGOUT_MENU_PROPERTIES={"icon":"sap-icon://person-placeholder"}
+SAP_LOGOUT_ACTION_ROLE=Button
+SAP_LOGOUT_ACTION_PROPERTIES={"text":"Sign Out"}
+SAP_AUTHENTICATED_URL_PATTERN=/sap/bc/ui2/flp
+SAP_LOGGED_OUT_URL_PATTERN=(login|logoff)
+```
+
+The JSON properties can be adapted to the Launchpad version and language, for example by replacing
+`Sign Out` with the label exposed by the target system. CSS selectors take precedence over UI5
+properties. Optional URL patterns add post-login and post-logout assertions. The `@auth` scenario is
+skipped safely when credentials or a logout strategy are absent.
 
 ## Gherkin and Xray
 
